@@ -10,7 +10,6 @@ public final class Juego {
     Comida comida;
     Enemigo enemigo;
     Espacio visto;
-    int turno=0;
 
     public Juego(int dificultad) {
         switch(dificultad){
@@ -36,7 +35,6 @@ public final class Juego {
                 enemigo = new Enemigo(8);
                 break;  
         }
-        visto = new Espacio();
         this.encontrarItem();
         while(p1.vida>0&&tesoro.encontrados<tesoro.cantidad){
             this.jugar();
@@ -51,7 +49,7 @@ public final class Juego {
         System.out.println(this.toString());
     }
 
-    public void jugar() { 
+    public void jugar() {    
         gucci.agregar(p1);  
         gucci.imprimirMapa();
         System.out.println(p1.toString());
@@ -61,73 +59,105 @@ public final class Juego {
     }
     
     public void opciones() {
-        visto.agregar(p1);
-        this.turno++;
+        visto = new Espacio(p1);
         boolean result=false;
         boolean seSale=false;
-        this.recorrido();
+        this.representacion();
         gucci.agregar(visto);
         while(!result&&!seSale){
             Scanner lector = new Scanner(System.in);
             System.out.println("W(a/j) N(w/i) S(s/k) E(d/l)");
-            char opcion = lector.next().charAt(0);               
+            char opcion = lector.next().charAt(0);
                 switch(opcion){
-                    case 'a':
-                        p1.moverY(-1);
-                        if(p1.posY<0||p1.posY<gucci.dimension){
+                    case 'a':                     
+                        if(p1.posY-1<0){
                             seSale=true;
+                            break;
                         }
-                        visto.agregar(p1);
+                        p1.moverY(-1);
+                        this.representacion();
+                        gucci.agregar(visto);
                         this.encontrarItem();
                         result=true;
                         p1.cambiarVida(-2);
                         break;
-                    case 'w':
-                        p1.moverX(-1);
-                        if(p1.posY<0||p1.posY<gucci.dimension){
+                    case 'w':                       
+                        if(p1.posX-1<0){
                             seSale=true;
+                            break;
                         }
-                        visto.agregar(p1);
+                        p1.moverX(-1);
+                        this.representacion();
+                        gucci.agregar(visto);
                         this.encontrarItem();
                         result=true;
                         p1.cambiarVida(-2);                        
                         break;
-                    case 's':
+                    case 's':                        
+                        if(p1.posX+1==gucci.dimension){
+                            seSale=true;
+                            break;
+                        }
                         p1.moverX(1);
-                        visto.agregar(p1);
+                        this.representacion();
+                        gucci.agregar(visto);
                         this.encontrarItem();
                         result=true;
                         p1.cambiarVida(-2);                       
                         break;
-                    case 'd':
+                    case 'd':                       
+                        if(p1.posY+1==gucci.dimension){
+                            seSale=true;
+                            break;
+                        }
                         p1.moverY(1); 
-                        visto.agregar(p1);
+                        this.representacion();
+                        gucci.agregar(visto);
                         this.encontrarItem();
                         result=true;
                         p1.cambiarVida(-2);                     
                         break;  
                     case 'j':
+                        if(visto.posY-1<0){
+                            seSale=true;
+                            break;
+                        }
                         visto.moverY(-1);
-                        visto.agregar(visto);
-                        this.recorrido();
+                        this.representacion();
+                        gucci.agregar(visto);
                         result=true;
                         p1.cambiarVida(-1);                      
                         break;
                     case 'i':
+                        if(visto.posX-1<0){
+                            seSale=true;
+                            break;
+                        }
                         visto.moverX(-1);
-                        visto.agregar(visto);
+                        this.representacion();
+                        gucci.agregar(visto);
                         result=true;
                         p1.cambiarVida(-1);                        
                         break;
                     case 'k':
+                        if(visto.posX+1==gucci.dimension){
+                            seSale=true;
+                            break;
+                        }
                         visto.moverX(1);
-                        visto.agregar(visto);
+                        this.representacion();
+                        gucci.agregar(visto);
                         result=true;
                         p1.cambiarVida(-1);                       
                         break;
                     case 'l':
+                        if(visto.posY+1==gucci.dimension){
+                            seSale=true;
+                            break;
+                        }
                         visto.moverY(1);
-                        visto.agregar(visto);
+                        this.representacion();
+                        gucci.agregar(visto);
                         result=true;
                         p1.cambiarVida(-1);                        
                         break;  
@@ -136,28 +166,26 @@ public final class Juego {
                         break;
                 }
         }
-        this.turno++;
-        this.recorrido();
     }
     
-    public void representacion(Espacio o){
-        o.representacion=' ';
+    public void representacion(){
+        visto.representacion=' ';
         for(int i=0;i<comida.cantidad;i++){
             Comida food = (Comida) comida.matriz[i];
-            if(o.posX==food.posX&&o.posY==food.posY){
-                o.representacion=food.representacion;
+            if(visto.posX==food.posX&&visto.posY==food.posY){
+                visto.representacion=food.representacion;
             }
         }
         for(int i=0;i<enemigo.cantidad;i++){
             Enemigo enemy = (Enemigo) enemigo.matriz[i];
-            if(o.posX==enemy.posX&&o.posY==enemy.posY){
-                o.representacion=enemy.representacion;
+            if(visto.posX==enemy.posX&&visto.posY==enemy.posY){
+                visto.representacion=enemy.representacion;
             } 
         }
         for(int i=0;i<tesoro.cantidad;i++){
             Tesoro chest = (Tesoro) tesoro.matriz[i];
-            if(o.posX==chest.posX&&o.posY==chest.posY){
-                o.representacion=chest.representacion;
+            if(visto.posX==chest.posX&&visto.posY==chest.posY){
+                visto.representacion=chest.representacion;
             }
         }
     }
@@ -185,8 +213,10 @@ public final class Juego {
         }
         for(i=0;i<enemigo.cantidad;i++){
             Enemigo enemy = (Enemigo) enemigo.matriz[i];
-            if(p1.posX==enemy.posX&&p1.posY==enemy.posY){
+            if(p1.posX==enemy.posX&&p1.posY==enemy.posY&&ItemYaEncontrado()){
                 System.out.println("Encontraste Un Enemigo! Salud-5");
+                enemigo.encontrados++;
+                enemigo.yaSalio[enemigo.encontrados-1]=enemy;
                 p1.cambiarVida(enemy.afecta);
                 gucci.agregar(enemy);
             }
@@ -220,14 +250,6 @@ public final class Juego {
     @Override
     public String toString() {
         return "$:" + tesoro.encontrados + "/"+tesoro.cantidad +", !:"+enemigo.encontrados + "/"+enemigo.cantidad+", +:"+comida.encontrados + "/"+comida.cantidad;
-    }
-
-    private void recorrido() {
-        for(int i=0;i<this.turno;i++){
-            Espacio walked = (Espacio) visto.matriz[i];
-            this.representacion(walked);
-            gucci.agregar(walked);
-        }
     }
     
 }
