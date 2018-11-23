@@ -60,11 +60,10 @@ public final class Juego {
     
     public void opciones() {
         visto = new Espacio(p1);
-        boolean result=false;
         boolean seSale=false;
         this.representacion();
         gucci.agregar(visto);
-        while(!result&&!seSale){
+        while(!seSale){
             Scanner lector = new Scanner(System.in);
             System.out.println("W(a/j) N(w/i) S(s/k) E(d/l)");
             char opcion = lector.next().charAt(0);
@@ -78,7 +77,6 @@ public final class Juego {
                         this.representacion();
                         gucci.agregar(visto);
                         this.encontrarItem();
-                        result=true;
                         p1.cambiarVida(-2);
                         break;
                     case 'w':                       
@@ -90,7 +88,6 @@ public final class Juego {
                         this.representacion();
                         gucci.agregar(visto);
                         this.encontrarItem();
-                        result=true;
                         p1.cambiarVida(-2);                        
                         break;
                     case 's':                        
@@ -102,7 +99,6 @@ public final class Juego {
                         this.representacion();
                         gucci.agregar(visto);
                         this.encontrarItem();
-                        result=true;
                         p1.cambiarVida(-2);                       
                         break;
                     case 'd':                       
@@ -114,7 +110,6 @@ public final class Juego {
                         this.representacion();
                         gucci.agregar(visto);
                         this.encontrarItem();
-                        result=true;
                         p1.cambiarVida(-2);                     
                         break;  
                     case 'j':
@@ -125,7 +120,6 @@ public final class Juego {
                         visto.moverY(-1);
                         this.representacion();
                         gucci.agregar(visto);
-                        result=true;
                         p1.cambiarVida(-1);                      
                         break;
                     case 'i':
@@ -136,7 +130,6 @@ public final class Juego {
                         visto.moverX(-1);
                         this.representacion();
                         gucci.agregar(visto);
-                        result=true;
                         p1.cambiarVida(-1);                        
                         break;
                     case 'k':
@@ -147,7 +140,6 @@ public final class Juego {
                         visto.moverX(1);
                         this.representacion();
                         gucci.agregar(visto);
-                        result=true;
                         p1.cambiarVida(-1);                       
                         break;
                     case 'l':
@@ -158,11 +150,10 @@ public final class Juego {
                         visto.moverY(1);
                         this.representacion();
                         gucci.agregar(visto);
-                        result=true;
                         p1.cambiarVida(-1);                        
                         break;  
                     default:
-                        result=false;
+                        seSale=true;
                         break;
                 }
         }
